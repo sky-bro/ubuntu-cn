@@ -2,7 +2,9 @@
 
 > 在中国，ubuntu-cn更好用。
 
-[中文](./README-zh_CN.md)  [English](./README.md)
+![Build & Push images](https://github.com/sky-bro/ubuntu-cn/workflows/Build%20&%20Push%20images/badge.svg)
+
+<u>中文</u> | [English](./README.md)
 
 * 发布在DockerHub: [skybro/ubuntu-cn](https://hub.docker.com/r/skybro/ubuntu-cn/)
 * 源码在Github: [sky-bro/ubuntu-cn](https://github.com/sky-bro/ubuntu-cn)

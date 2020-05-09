@@ -2,7 +2,9 @@
 
 > Use ubuntu-cn in China.
 
-[中文](./README-zh_CN.md)  [English](./README.md)
+![Build & Push images](https://github.com/sky-bro/ubuntu-cn/workflows/Build%20&%20Push%20images/badge.svg)
+
+[中文](./README-zh_CN.md) | <u>English</u>
 
 * Released @DockerHub: [skybro/ubuntu-cn](https://hub.docker.com/r/skybro/ubuntu-cn/)
 * Source @Github: [sky-bro/ubuntu-cn](https://github.com/sky-bro/ubuntu-cn)
