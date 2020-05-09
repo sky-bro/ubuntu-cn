@@ -1,9 +1,11 @@
 # ubuntu-cn
 
+> 在中国，ubuntu-cn更好用。
+
 [中文](./README-zh_CN.md)  [English](./README.md)
 
-> 发布在Docker Hub: [skybro/ubuntu-cn](https://hub.docker.com/r/skybro/ubuntu-cn/)
-> 源码在Github: [sky-bro/ubuntu-cn](https://github.com/sky-bro/ubuntu-cn)
+* 发布在DockerHub: [skybro/ubuntu-cn](https://hub.docker.com/r/skybro/ubuntu-cn/)
+* 源码在Github: [sky-bro/ubuntu-cn](https://github.com/sky-bro/ubuntu-cn)
 
 ## 特性
 

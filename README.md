@@ -1,9 +1,11 @@
 # ubuntu-cn
 
+> Use ubuntu-cn in China.
+
 [中文](./README-zh_CN.md)  [English](./README.md)
 
-> Published on Docker Hub: [skybro/ubuntu-cn](https://hub.docker.com/r/skybro/ubuntu-cn/)
-> Source @Github: [sky-bro/ubuntu-cn](https://github.com/sky-bro/ubuntu-cn)
+* Released @DockerHub: [skybro/ubuntu-cn](https://hub.docker.com/r/skybro/ubuntu-cn/)
+* Source @Github: [sky-bro/ubuntu-cn](https://github.com/sky-bro/ubuntu-cn)
 
 ## Features
 
