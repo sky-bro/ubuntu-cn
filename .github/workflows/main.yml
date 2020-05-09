@@ -2,9 +2,9 @@ name: "Build & Push images"
 
 on:
   push:
-    branches:
-      - master
-  pull_request:
+    paths:
+      - '.github/workflows/main.yml'
+      - 'Dockerfile'
     branches:
       - master
 
@@ -22,7 +22,7 @@ jobs:
           V=20.04 && docker image build -t ubuntu-cn:$V --build-arg VERSION=$V .
           V=20.10 && docker image build -t ubuntu-cn:$V --build-arg VERSION=$V .
           V=14.04 && docker image build -t ubuntu-cn:$V --build-arg VERSION=$V .
-          V=12.04 && docker image build -t ubuntu-cn:$V --build-arg VERSION=$V .
+          V=16.04 && docker image build -t ubuntu-cn:$V --build-arg VERSION=$V .
       - name: Tags
         run: |
           V=18.04 && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:$V \
