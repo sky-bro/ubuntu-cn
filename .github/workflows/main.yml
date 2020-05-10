@@ -9,70 +9,32 @@ on:
       - master
 
 jobs:
-  build-push:
+  build-tag-push:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Docker login
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build
+      - name: Build-Tag-Push
         run: |
-          V=18.04 && docker image build -t ubuntu-cn:$V --build-arg VERSION=$V .
-          V=19.10 && docker image build -t ubuntu-cn:$V --build-arg VERSION=$V .
-          V=20.04 && docker image build -t ubuntu-cn:$V --build-arg VERSION=$V .
-          V=20.10 && docker image build -t ubuntu-cn:$V --build-arg VERSION=$V .
-          V=14.04 && docker image build -t ubuntu-cn:$V --build-arg VERSION=$V .
-          V=16.04 && docker image build -t ubuntu-cn:$V --build-arg VERSION=$V .
-      - name: Tags
-        run: |
-          V=18.04 && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:$V \
-            && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:18 \
-            && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:bionic
-
-          V=19.10 && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:$V \
-            && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:19 \
-            && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:eoan
-
-          V=20.04 && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:$V \
-            && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:20 \
-            && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:focal \
-            && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:latest
-
-          V=20.10 && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:$V \
-            && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:groovy \
-            && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:dev
-
-          V=14.04 && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:$V \
-            && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:14 \
-            && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:trusty
-
-          V=16.04 && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:$V \
-            && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:16 \
-            && docker tag ubuntu-cn:$V ${{ secrets.DOCKER_USER }}/ubuntu-cn:xenial
-          
-      - name: Push
-        run: |
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:18.04
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:18
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:bionic
-          
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:19.10
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:19
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:eoan
-
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:20.04
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:20
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:focal
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:latest
-
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:20.10
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:groovy
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:dev
-
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:14.04
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:14
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:trusty
-
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:16.04
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:16
-          docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:xenial
+          # A tag name must be valid ASCII and 
+          # may contain lowercase and uppercase letters, digits, underscores, periods and dashes.
+          # A tag name may not start with a period or a dash and
+          # may contain a maximum of 128 characters.
+          version_keys=(v14 v16 v18 v19 v20 v201)
+          v14=(14.04 14 trusty)
+          v16=(16.04 16 xenial)
+          v18=(18.04 18 bionic)
+          v19=(19.10 19 eoan)
+          v20=(20.04 20 focal latest)
+          v201=(20.10 groovy dev)
+          for k in "${version_keys[@]}"; do
+            k=$k[@]
+            tags=(${!k})
+            VER=${tags[0]}
+            docker image build -t ubuntu-cn:$VER --build-arg VERSION=$VER .
+            for tag in ${tags[@]:1}; do
+              docker tag ubuntu-cn:$VER ${{ secrets.DOCKER_USER }}/ubuntu-cn:$tag
+              docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:$tag
+            done;
+          done;
