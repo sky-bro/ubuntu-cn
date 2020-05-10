@@ -1,6 +1,6 @@
 # ubuntu-cn
 
-> 在中国，ubuntu-cn更好用。
+> 适合国内使用的ubuntu docker镜像。
 
 ![Build & Push images](https://github.com/sky-bro/ubuntu-cn/workflows/Build%20&%20Push%20images/badge.svg)
 
@@ -16,7 +16,7 @@
 * 使用清华源替换官方源. ([Tsinghua Tuna](https://mirror.tuna.tsinghua.edu.cn/help/ubuntu/))
 * 时区设为中国
 * 语言设为en_US.utf8
-* 启用bash extended globbing
+* 启用bash扩展通配符
 
 ## 直接使用
 
