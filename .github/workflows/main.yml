@@ -19,17 +19,17 @@ jobs:
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build-Tag-Push
         run: |
-          # A tag name must be valid ASCII and 
+          # A tag name must be valid ASCII and
           # may contain lowercase and uppercase letters, digits, underscores, periods and dashes.
           # A tag name may not start with a period or a dash and
           # may contain a maximum of 128 characters.
-          version_keys=(v14 v16 v18 v19 v20 v201)
+          version_keys=(v14 v16 v18 v20 v21 v211)
           v14=(14.04 14 trusty)
           v16=(16.04 16 xenial)
           v18=(18.04 18 bionic)
-          v19=(19.10 19 eoan)
-          v20=(20.04 20 focal latest)
-          v201=(20.10 groovy dev)
+          v20=(20.04 20 focal)
+          v21=(21.04 hirsute latest)
+          v211=(21.10 impish rolling)
           for k in "${version_keys[@]}"; do
             k=$k[@]
             tags=(${!k})

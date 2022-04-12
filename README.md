@@ -17,6 +17,9 @@
 * Tiemzone set to China
 * Language set to en_US.utf8
 * Bash extended globbing enabled
+* [ ] ssh server
+  * enable X forwarding
+  * enable Root login
 
 ## Just Run a Container
 
