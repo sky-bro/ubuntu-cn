@@ -25,6 +25,6 @@ RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* 
 ENV LANG en_US.utf8
 
 # Other packages
-
+# RUN apt-get install -y openssh-server && service ssh start
 
 # CMD ["/bin/bash"]

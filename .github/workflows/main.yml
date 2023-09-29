@@ -4,39 +4,44 @@ on:
   push:
     paths:
       - '.github/workflows/main.yml'
+      - '.github/workflows/build-one-version.yml'
       - 'Dockerfile'
     branches:
       - master
   schedule:
+    # https://crontab.guru/#0_0_*_*_0
+    # At 00:00 on Sunday.
     - cron: '0 0 * * 0'
 
 jobs:
-  build-tag-push:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Docker login
-        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build-Tag-Push
-        run: |
-          # A tag name must be valid ASCII and
-          # may contain lowercase and uppercase letters, digits, underscores, periods and dashes.
-          # A tag name may not start with a period or a dash and
-          # may contain a maximum of 128 characters.
-          version_keys=(v14 v16 v18 v20 v21 v211)
-          v14=(14.04 14 trusty)
-          v16=(16.04 16 xenial)
-          v18=(18.04 18 bionic)
-          v20=(20.04 20 focal)
-          v21=(21.04 hirsute latest)
-          v211=(21.10 impish rolling)
-          for k in "${version_keys[@]}"; do
-            k=$k[@]
-            tags=(${!k})
-            VER=${tags[0]}
-            docker image build -t ubuntu-cn:$VER --build-arg VERSION=$VER .
-            for tag in ${tags[@]:1}; do
-              docker tag ubuntu-cn:$VER ${{ secrets.DOCKER_USER }}/ubuntu-cn:$tag
-              docker push ${{ secrets.DOCKER_USER }}/ubuntu-cn:$tag
-            done;
-          done;
+  build:
+    strategy:
+      fail-fast: true
+      matrix:
+        tags:
+          - |
+            14.04
+            14
+            trusty
+          - |
+            16.04
+            16
+            xenial
+          - |
+            18.04
+            18
+            bionic
+          - |
+            20.04
+            20
+            focal
+          - |
+            22.04
+            22
+            jammy
+            latest
+    uses: ./.github/workflows/build-one-version.yml
+    with:
+      tags: |
+        ${{ matrix.tags }}
+    secrets: inherit

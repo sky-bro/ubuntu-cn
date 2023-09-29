@@ -20,6 +20,7 @@
 * [ ] ssh server
   * enable X forwarding
   * enable Root login
+* [ ] vim
 
 ## Just Run a Container
 
