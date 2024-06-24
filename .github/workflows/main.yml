@@ -1,6 +1,7 @@
 name: "Build & Push images"
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - '.github/workflows/main.yml'

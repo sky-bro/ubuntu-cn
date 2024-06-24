@@ -6,14 +6,22 @@ on:
       tags:
         required: true
         type: string
+      registry_image:
+        required: false
+        default: 'skybro/ubuntu-cn'
+        type: string
+      build_args:
+        required: false
+        type: string
+      platform:
+        required: false
+        type: string
+        default: '["linux/amd64", "linux/arm/v7", "linux/arm64/v8"]'
     secrets:
       DOCKER_USER:
         required: true
       DOCKER_PASSWORD:
         required: true
-
-env:
-  REGISTRY_IMAGE: skybro/ubuntu-cn
 
 jobs:
   get-first-tag:
@@ -31,10 +39,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        platform:
-          - linux/amd64
-          - linux/arm/v7
-          - linux/arm64/v8
+        platform: ${{ fromJSON(inputs.platform) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,7 +47,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY_IMAGE }}
+          images: ${{ inputs.registry_image }}
           tags: |
             ${{ inputs.tags }}
       - name: Set up QEMU
@@ -60,9 +65,11 @@ jobs:
         with:
           context: .
           platforms: ${{ matrix.platform }}
-          build-args: VERSION=${{ needs.get-first-tag.outputs.first_tag }}
+          build-args: |
+            ${{ inputs.build_args }}
+            VERSION=${{ needs.get-first-tag.outputs.first_tag }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
+          outputs: type=image,name=${{ inputs.registry_image }},push-by-digest=true,name-canonical=true,push=true
       - name: Export digest
         run: |
           mkdir -p /tmp/digests
@@ -96,7 +103,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY_IMAGE }}
+          images: ${{ inputs.registry_image }}
           tags: |
             ${{ inputs.tags }}
       - name: Login to Docker Hub
@@ -108,7 +115,7 @@ jobs:
         working-directory: /tmp/digests
         run: |
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)
+            $(printf '${{ inputs.registry_image }}@sha256:%s ' *)
       - name: Inspect image
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:$(echo "${{ inputs.tags }}" | head -n1)
+          docker buildx imagetools inspect ${{ inputs.registry_image }}:$(echo "${{ inputs.tags }}" | head -n1)
