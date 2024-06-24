@@ -1,0 +1,35 @@
+name: "Build & Push images"
+
+on:
+  push:
+    paths:
+      - '.github/workflows/main.yml'
+      - 'Dockerfile'
+    branches:
+      - pwn
+  schedule:
+    # https://crontab.guru/#0_0_*_*_0
+    # At 00:00 on Sunday.
+    - cron: '0 0 * * 0'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: true
+      matrix:
+        tags:
+          - |
+            22.04
+            22
+            jammy
+            latest
+    uses: sky-bro/ubuntu-cn/.github/workflows/build-one-version.yml@master
+    with:
+      tags: |
+        ${{ matrix.tags }}
+      registry_image: skybro/ubt-pwn
+      build_args: |
+        USERNAME=sky
+        PASSWORD=sky
+      platform: '["linux/amd64"]'
+    secrets: inherit
