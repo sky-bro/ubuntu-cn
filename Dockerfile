@@ -13,7 +13,7 @@ RUN sed -i "s/http:\/\/archive.ubuntu.com/http:\/\/mirrors.tuna.tsinghua.edu.cn/
     apt-get install -y lib32z1 apt-transport-https python3 python3-pip git \
     libglib2.0-dev libfdt-dev libpixman-1-dev zlib1g-dev \
     vim nano netcat openssh-server unzip make wget bison flex build-essential \
-    curl qemu qemu-system-x86 gcc gdb clang lldb tmux konsole
+    curl qemu qemu-system-x86 gcc gcc-multilib gdb clang lldb tmux konsole
 
 # enable ssh login
 RUN rm -f /etc/service/sshd/down
@@ -43,6 +43,18 @@ RUN chmod +x /root/start.sh
 # enable sudo
 RUN apt-get install -y sudo && \
        usermod -aG sudo ${USERNAME}
+
+# better shell
+RUN apt -y update && apt install -y zsh fzf && \
+    chsh -s `which zsh` && \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k && \
+    sed -i 's/^ZSH_THEME=.*$/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc && \
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && \
+    sed -i 's/plugins=(/plugins=(zsh-autosuggestions /' ~/.zshrc && \
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && \
+    ~/.fzf/install --all
+
 
 # pwn-related tools
 RUN python3 -m pip config set global.index-url http://pypi.tuna.tsinghua.edu.cn/simple && \
