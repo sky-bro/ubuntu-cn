@@ -45,7 +45,7 @@ RUN apt-get install -y sudo && \
        usermod -aG sudo ${USERNAME}
 
 # better shell
-RUN apt -y update && apt install -y zsh fzf && \
+RUN apt -y update && apt install -y zsh && \
     chsh -s `which zsh` && \
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k && \
